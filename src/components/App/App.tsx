@@ -4,12 +4,14 @@ import { useDebounce } from "use-debounce";
 import css from "./App.module.css";
 import { fetchNotes } from "../../services/noteService";
 import NoteList from "../NoteList/NoteList";
-import NoteModal from "../Modal/Modal";
+
 import Pagination from "../Pagination/Pagination";
 import SearchBox from "../SearchBox/SearchBox";
 import Loader from "../Loader/Loader";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
 import { Toaster } from "react-hot-toast";
+import NoteForm from "../NoteForm/NoteForm";
+import Modal from "../Modal/Modal";
 
 export default function App() {
   const [search, setSearch] = useState("");
@@ -46,16 +48,19 @@ export default function App() {
             page={page}
           />
         )}
-        {
-          <button className={css.button} onClick={openModal}>
-            Create note +
-          </button>
-        }
+
+        <button className={css.button} onClick={openModal}>
+          Create note +
+        </button>
       </header>
       {isLoading && <Loader />}
       {isError && <ErrorMessage />}
       {isSuccess && data.notes.length > 0 && <NoteList notes={data.notes} />}
-      {isOpen && <NoteModal onClose={closeModal} isLoading={isLoading} />}
+      {isOpen && (
+        <Modal onClose={closeModal}>
+          <NoteForm onClose={closeModal} />
+        </Modal>
+      )}
     </div>
   );
 }
